@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=2.0, user-scalable=yes" />  
+<title>澳洲移民表</title>
+
+<!-- Bootstrap -->
+<link href="css/bootstrap.min.css" rel="stylesheet">
+<link href="css/main.css" rel="stylesheet">
+
+<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+<!--[if lt IE 9]>
+  <script src="http://cdn.bootcss.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+  <script src="http://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<script src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>    
+</head>
+<body>
+<div class="container">
+<h1>澳洲移民用户提交表单信息</h1>
+<p>
+  <button type="button" class="btn btn-primary btn-lg" onClick="guzhuyim()" class="guzhuyim">雇主移民</button>
+  <button type="button" class="btn btn-default btn-lg" onClick="tzyim()" class="tzyim">投资移民</button>
+</p>
+<table class="table table-bordered" id="guzhuyim">
+   <tr>
+	  <td>姓名</td>
+	  <td>电话</td>
+	  <td>邮箱</td>
+	  <td>最高学历</td>
+	  <td>工作经历</td>
+	  <td>您的问题或需说明的特殊情况</td>  
+   </tr>
+</table>
+<table class="table table-bordered" id="tzyim" style="display:none;">
+   <tr>
+	  <td>姓名</td>
+	  <td>电话</td>
+	  <td>邮箱</td>
+	  <td>主申请人的学历</td>
+	  <td>净资产以及个人资产（人民币）</td>
+	  <td>最近四年主要生意的年营业额</td>  
+	  <td>请简要介绍企业的营业性质以及规模</td>
+   </tr>
+</table>
+</div>
+
+<script src="js/bootstrap.min.js"></script>
+<script>
+$(document).ready(function() {
+	guzhuyim();
+});
+
+function guzhuyim(){
+	$("#tzyim").css('display','none'); $("#guzhuyim").css('display','block');
+	$.post("http://www.todaymedia.com.au/mapi/immigration/allEmployer",
+	  function(json){
+	      var json = eval('(' + json + ')');
+		  $("#tzyim tr").remove(".listnews");
+		  if(json == null) { 
+			   $("#guzhuyim").append("<tr><td>没有信息</td></tr>");	
+		  }else{
+			  for(var i=0;i<json.length;i++){ 
+			  		$("#guzhuyim").append("<tr class='listnews'><td>"+json[i].name+"</td><td>"+json[i].mobilephone+"</td><td>"+json[i].email+"</td><td>"+json[i].degree+"</td><td>"+json[i].experience+"</td><td>"+json[i].comment+"</td></tr>");		  
+			  }	
+		  }
+	 });
+}
+
+function tzyim(){
+	$("#guzhuyim").css('display','none'); $("#tzyim").css('display','block'); 
+	$.post("http://www.todaymedia.com.au/mapi/immigration/allInvestment",
+	  function(json){
+	      var json = eval('(' + json + ')');
+		  $("#guzhuyim tr").remove(".listnews");
+		  if(json == null) { 
+			   $("#tzyim").append("<tr><td>没有信息</td></tr>");	
+		  }else{
+			  for(var i=0;i<json.length;i++){ 
+			  		$("#tzyim").append("<tr class='listnews'><td>"+json[i].name+"</td><td>"+json[i].mobilephone+"</td><td>"+json[i].email+"</td><td>"+json[i].degree+"</td><td>"+json[i].assets+"</td><td>"+json[i].turnover+"</td><td>"+json[i].comment+"</td></tr>");		  
+			  }	
+		  }
+	 });
+}
+</script>
+</body>
+</html>
